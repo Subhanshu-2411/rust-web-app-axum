@@ -1,6 +1,7 @@
 #![allow(unused)]
 
-use axum::Router;
+use std::net::SocketAddr;
+use axum::{Router, ServiceExt};
 use axum::routing::get;
 use axum::response::Html;
 
@@ -10,4 +11,16 @@ async fn main() {
         "/hello",
         get(|| async { Html("Hello <strong>World!!!</string>") }),
     );
+
+    // region:       ----Start Server
+
+    let address = SocketAddr::from(([127, 0, 0, 1], 8080));
+    println!("--> Listening on {address}\n");
+
+    axum::Server::bind(&address)
+        .serve(routes_hello.into_make_service())
+        .await
+        .unwrap();
+
+    // endregion:    ----Start Server
 }
